@@ -78,7 +78,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             width: double.infinity,
-            child:SingleChildScrollView(child: Row(
+            child:SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+
+              child: Row(
               children: [
                 for (var i = 0; i < listCategory.length; i++)
                   TextButton(
