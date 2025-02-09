@@ -38,16 +38,10 @@ class NewPage extends StatelessWidget {
               ),
               Text(
                 item.description,
+                textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: (){
-                  Uri.file('${item.url}');
-                },
-                child: const Text('Acessar noticia completa'),
-              ),
+              
             ],
           ),
         )

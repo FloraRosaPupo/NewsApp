@@ -130,6 +130,15 @@ class _HomePageState extends State<HomePage> {
                     child: Card(
                       child: Column(
                         children: [
+                          Container(
+                            width: 200,
+                            height: 75,
+                            child: Image.network(
+                              item.image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 5,),
                           Row(
                             children: [
                               //toggle
@@ -145,23 +154,21 @@ class _HomePageState extends State<HomePage> {
                                   }),
                               Container(
                                 width: 80,
-                                height: 50,
-                                child: Text(
-                                  item.source.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      item.source.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          Container(
-                            width: 200,
-                            height: 75,
-                            child: Image.network(
-                              item.image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                          
                           Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
