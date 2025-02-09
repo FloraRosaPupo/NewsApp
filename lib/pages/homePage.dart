@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:newa/data/controllers/newsControllers.dart';
 import 'package:newa/data/http/httpClient.dart';
 import 'package:newa/data/repositories/newsRepository.dart';
+import 'package:newa/pages/components/gridNews.dart';
 import 'package:newa/pages/favoritesPage.dart';
 import 'package:newa/pages/newPage.dart';
 import 'package:newa/pages/stores/newsStores.dart';
@@ -24,21 +24,27 @@ class _HomePageState extends State<HomePage> {
     ),
   );
 
-  late Newscontrollers newscontrollers = Get.put(Newscontrollers());
-
+  List<String> listCategory = ['general', 'business', 'technology', 'science', 'sports'];
   late List<bool> isFavoriteList = [];
+  String selectedCategory = 'general';
 
- @override
+  @override
   void initState() {
     super.initState();
     store.getNews();
   }
 
-
   void toggleFavorite(int index) {
     setState(() {
       isFavoriteList[index] = !isFavoriteList[index];
     });
+  }
+
+  void selectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+    // Aqui você pode adicionar lógica para filtrar as notícias com base na categoria selecionada
   }
 
   @override
@@ -51,158 +57,63 @@ class _HomePageState extends State<HomePage> {
               tooltip: 'Notícias Curtidas',
               icon: const Icon(Icons.favorite_border),
               onPressed: () {
-               Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => FavoritesPage(
-          isFavoriteList: isFavoriteList,
-          newsList: store.state.value
-              .asMap()
-              .entries
-              .where((entry) => isFavoriteList[entry.key])
-              .map((entry) => entry.value.title)
-              .toList(),
-        ),));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesPage(
+                      isFavoriteList: isFavoriteList,
+                      newsList: store.state.value
+                          .asMap()
+                          .entries
+                          .where((entry) => isFavoriteList[entry.key])
+                          .map((entry) => entry.value.title)
+                          .toList(),
+                    ),
+                  ),
+                );
               }),
         ],
       ),
-      body: AnimatedBuilder(
-          animation: Listenable.merge([
-            store.isLoading,
-            store.error,
-            store.state,
-          ]),
-          builder: (context, child) {
-            if (store.isLoading.value == true) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (store.error.value.isNotEmpty) {
-              return Center(
-                child: Text(
-                  store.error.value,
-                  style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            }
-
-            if (store.state.value.isEmpty) {
-              return const Center(
-                child: Text(
-                  'Nenhum item na lista',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            } else {
-              return GridView.builder(
-                padding: EdgeInsets.all(8),
-                itemCount: store.state.value.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 20,
-                ),
-                itemBuilder: (_, index) {
-                  final item = store.state.value[index];
-
-                  if (isFavoriteList.length != store.state.value.length) {
-                    isFavoriteList =
-                        List<bool>.filled(store.state.value.length, false);
-                  }
-
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NewPage(
-                            item: item,
-                          ),
-                        ),
-                      );
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            child: Row(
+              children: [
+                for (var i = 0; i < listCategory.length; i++)
+                  TextButton(
+                    onPressed: () {
+                      selectCategory(listCategory[i]);
                     },
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 75,
-                            child: Image.network(
-                              item.image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              //toggle
-                              IconButton(
-                                  icon: Icon(
-                                    isFavoriteList[index]
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                  ),
-                                  onPressed: () {
-                                   toggleFavorite(index);
-                                   isFavoriteList[index]? newscontrollers.add(item): newscontrollers.remove(item);
-                                  }),
-                              Container(
-                                width: 80,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      item.source.name,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                Text(
-                                  item.title,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                Text(
-                                  DateFormat('dd/MM/yyyy')
-                                      .format(DateTime.parse(item.publishedAt)),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateColor.resolveWith((states) {
+                        return i == listCategory[i]
+                            ? Colors.transparent
+                            : Colors.white.withOpacity(0.3);
+                      }),
+                    ),
+                    child: Text(
+                      '${listCategory[i]}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: selectedCategory == listCategory[i]
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     ),
-                  );
-                },
-              );
-            }
-          }),
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Expanded(
+            child: GridNews(
+              store: store,
+              isFavoriteList: isFavoriteList,
+              toggleFavorite: toggleFavorite,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
