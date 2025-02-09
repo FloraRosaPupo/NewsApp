@@ -21,12 +21,13 @@ class _HomePageState extends State<HomePage> {
   final NewsStores store = NewsStores(
     repository: NewsRepository(
       client: HttpClient(),
+      category: 'general',
     ),
   );
 
-  List<String> listCategory = ['general', 'business', 'technology', 'science', 'sports'];
+  List<String> listCategory = ['Geral', 'Mundo', 'Nação', 'Negócios', 'Tecnologia', 'Entretenimento', 'Esportes', 'Ciência', 'Saúde'];  
   late List<bool> isFavoriteList = [];
-  String selectedCategory = 'general';
+  String selectedCategory = 'Geral';
 
   @override
   void initState() {
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             width: double.infinity,
-            child: Row(
+            child:SingleChildScrollView(child: Row(
               children: [
                 for (var i = 0; i < listCategory.length; i++)
                   TextButton(
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       overlayColor: MaterialStateColor.resolveWith((states) {
                         return i == listCategory[i]
                             ? Colors.transparent
-                            : Colors.white.withOpacity(0.3);
+                            : Colors.purple.withOpacity(0.2);
                       }),
                     ),
                     child: Text(
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
               ],
-            ),
+            ),),
           ),
           SizedBox(height: 10),
           Expanded(
