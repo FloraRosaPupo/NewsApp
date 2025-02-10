@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       selectedCategory = category;
     });
-    filterNewsByCategory(category);
+    filterNewsByCategory(categoryMap[category]!);
   }
 
   void filterNewsByCategory(String category) {
