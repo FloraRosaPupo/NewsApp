@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:newa/data/http/exception.dart';
 import 'package:newa/data/model/newsModel.dart';
@@ -18,12 +17,12 @@ class NewsStores {
 
   NewsStores({required this.repository});
 
-  Future getNews() async {
+  Future getNews(String category) async {
     isLoading.value = true;
 
     try {
       //estancia do repositorio do News
-      final result = await repository.getNews(); //pega a lista de produtos
+      final result = await repository.getNews(category); //pega a lista de produtos
       state.value = result;
     } on NotFoundException catch (e) {
       error.value = e.message;

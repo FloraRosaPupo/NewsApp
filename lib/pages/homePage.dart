@@ -21,9 +21,20 @@ class _HomePageState extends State<HomePage> {
   final NewsStores store = NewsStores(
     repository: NewsRepository(
       client: HttpClient(),
-      category: 'general',
     ),
   );
+
+  final Map<String, String> categoryMap = {
+    'Geral': 'general',
+    'Mundo': 'world',
+    'Nação': 'nation',
+    'Negócios': 'business',
+    'Tecnologia': 'technology',
+    'Entretenimento': 'entertainment',
+    'Esportes': 'sports',
+    'Ciência': 'science',
+    'Saúde': 'health',
+  };
 
   List<String> listCategory = ['Geral', 'Mundo', 'Nação', 'Negócios', 'Tecnologia', 'Entretenimento', 'Esportes', 'Ciência', 'Saúde'];  
   late List<bool> isFavoriteList = [];
@@ -32,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    store.getNews();
+    store.getNews(categoryMap[selectedCategory]!);
   }
 
   void toggleFavorite(int index) {
@@ -45,7 +56,11 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       selectedCategory = category;
     });
-    // Aqui você pode adicionar lógica para filtrar as notícias com base na categoria selecionada
+    filterNewsByCategory(category);
+  }
+
+  void filterNewsByCategory(String category) {
+    store.getNews(category);
   }
 
   @override
@@ -78,35 +93,35 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             width: double.infinity,
-            child:SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-              children: [
-                for (var i = 0; i < listCategory.length; i++)
-                  TextButton(
-                    onPressed: () {
-                      selectCategory(listCategory[i]);
-                    },
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateColor.resolveWith((states) {
-                        return i == listCategory[i]
-                            ? Colors.transparent
-                            : Colors.purple.withOpacity(0.2);
-                      }),
-                    ),
-                    child: Text(
-                      '${listCategory[i]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: selectedCategory == listCategory[i]
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                children: [
+                  for (var i = 0; i < listCategory.length; i++)
+                    TextButton(
+                      onPressed: () {
+                        selectCategory(listCategory[i]);
+                      },
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith((states) {
+                          return i == listCategory[i]
+                              ? Colors.transparent
+                              : Colors.purple.withOpacity(0.2);
+                        }),
+                      ),
+                      child: Text(
+                        '${listCategory[i]}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: selectedCategory == listCategory[i]
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),),
+                ],
+              ),
+            ),
           ),
           SizedBox(height: 10),
           Expanded(
