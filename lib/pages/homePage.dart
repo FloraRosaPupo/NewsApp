@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:newa/data/controllers/newsControllers.dart';
 import 'package:newa/data/http/httpClient.dart';
 import 'package:newa/data/repositories/newsRepository.dart';
 import 'package:newa/pages/components/gridNews.dart';
 import 'package:newa/pages/favoritesPage.dart';
-import 'package:newa/pages/newPage.dart';
 import 'package:newa/pages/stores/newsStores.dart';
+import 'package:newa/utils/categoryMap.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,26 +21,20 @@ class _HomePageState extends State<HomePage> {
     ),
   );
 
-  final Map<String, String> categoryMap = {
-    'Geral': 'general',
-    'Mundo': 'world',
-    'Nação': 'nation',
-    'Negócios': 'business',
-    'Tecnologia': 'technology',
-    'Entretenimento': 'entertainment',
-    'Esportes': 'sports',
-    'Ciência': 'science',
-    'Saúde': 'health',
-  };
-
-  List<String> listCategory = ['Geral', 'Mundo', 'Nação', 'Negócios', 'Tecnologia', 'Entretenimento', 'Esportes', 'Ciência', 'Saúde'];  
   late List<bool> isFavoriteList = [];
   String selectedCategory = 'Geral';
 
   @override
+  //initState é chamado quando o widget é inserido na árvore de widgets
+  //e é o lugar ideal para inicializar variáveis e fazer chamadas de rede.
   void initState() {
     super.initState();
-    store.getNews(categoryMap[selectedCategory]!);
+    // Inicializa a lista de favoritos com false para todas as notícias
+    store.getNews(categoryMap[selectedCategory]!).then((_) {
+      setState(() {
+        isFavoriteList = List<bool>.filled(store.state.value.length, false);
+      });
+    });
   }
 
   void toggleFavorite(int index) {
