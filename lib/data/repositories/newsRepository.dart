@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:newa/data/http/exception.dart';
 import 'package:newa/data/http/httpClient.dart';
 import 'package:newa/data/model/newsModel.dart';
