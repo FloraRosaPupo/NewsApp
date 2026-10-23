@@ -1,11 +1,28 @@
-# NewsApp
+# NewsApp — Notícias e Favoritos
 
-Aplicativo para consultar notícias e categorias.
+## Descrição
 
-## Stack e organização
+Aplicativo Flutter para consultar notícias da GNews por categoria, visualizar detalhes e organizar favoritos durante a sessão. Requer uma chave da GNews; os favoritos são mantidos em memória.
+
+## Stack e bibliotecas
+
 Flutter/Dart, ValueNotifier, http e intl.
 
-Notícias e favoritos ficam em features próprias; transporte HTTP em core. Repositório, estado e tela têm responsabilidades separadas. GetX foi substituído por ValueNotifier para evitar dois mecanismos de estado. Favoritos usam identidade da notícia, e respostas antigas não sobrescrevem a categoria atual.
+Dependências e versões declaradas: [pubspec.yaml](pubspec.yaml).
+
+## Funcionalidades
+
+- Notícias por categoria.
+- Detalhes.
+- Favoritos em memória.
+
+## Licença
+
+Não há uma licença de distribuição definida para este repositório. Nenhuma licença MIT, Apache ou equivalente é concedida por este README. As atribuições e os direitos dos materiais de terceiros permanecem preservados.
+
+## Validação e limites
+
+Parsing, query codificada, erro/recuperação, respostas fora de ordem e identidade de favoritos. API real depende de GNEWS_API_KEY; favoritos não são persistidos.
 
 ## Executar
 Use a versão de Flutter registrada em `.github/workflows/ci.yml`.
@@ -26,21 +43,9 @@ A CI verifica erros de análise e os testes. Avisos e sugestões continuam visí
 ## Contribuir
 Abra uma branch por alteração, descreva o comportamento esperado e inclua testes para regras ou regressões. Mantenha credenciais e arquivos gerados fora do Git.
 
-## Licença
-Não há licença de distribuição definida neste repositório.
-
-
-## Funcionalidades
-
-- Notícias por categoria.
-- detalhes.
-- favoritos em memória.
-
-
 ## Configuração da API
 
 Execute com `flutter run --dart-define=GNEWS_API_KEY=SUA_CHAVE`. A chave antiga foi removida do código e deve ser revogada no provedor. Uma chave embarcada em aplicativo cliente continua extraível; restrinja uso e quota no provedor. Não inclua chaves privilegiadas no aplicativo.
-
 
 ## Organização e manutenção
 
