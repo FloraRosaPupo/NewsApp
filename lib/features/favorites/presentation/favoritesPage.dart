@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'favorites_controller.dart';
+import '../../news/presentation/newPage.dart';
 
 class FavoritesPage extends StatelessWidget {
   final FavoritesController favorites;
@@ -14,6 +15,9 @@ class FavoritesPage extends StatelessWidget {
               : ListView.builder(
                   itemCount: news.length,
                   itemBuilder: (context, index) => ListTile(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => NewPage(item: news[index]))),
                         title: Text(news[index].title),
                         trailing: IconButton(
                             icon: const Icon(Icons.favorite),
