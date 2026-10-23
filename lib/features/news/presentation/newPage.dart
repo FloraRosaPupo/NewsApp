@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newa/data/model/newsModel.dart';
+import 'package:newa/features/news/domain/newsModel.dart';
 
 class NewPage extends StatelessWidget {
   const NewPage({super.key, required this.item});
@@ -41,7 +41,6 @@ class NewPage extends StatelessWidget {
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
-              
             ],
           ),
         )
